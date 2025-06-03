@@ -1,1 +1,543 @@
-<h1>hello im back </h1>
+<!DOCTYPE html>
+<html lang="ku">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>تێستی کەسایەتی</title>
+    <style>
+        :root {
+            --primary: #6C63FF;
+            --secondary: #FF6584;
+            --light: #F8F9FA;
+            --dark: #343A40;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f0f2f5;
+            margin: 0;
+            padding: 0;
+            direction: rtl;
+            color: var(--dark);
+        }
+        
+        .container {
+            max-width: 800px;
+            margin: 30px auto;
+            padding: 20px;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            animation: fadeIn 0.5s ease;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        h1 {
+            color: var(--primary);
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: 2.2rem;
+        }
+        
+        .progress-container {
+            margin-bottom: 30px;
+        }
+        
+        .progress-bar {
+            height: 10px;
+            background-color: #e0e0e0;
+            border-radius: 5px;
+            overflow: hidden;
+            margin-bottom: 5px;
+        }
+        
+        .progress {
+            height: 100%;
+            background: linear-gradient(90deg, var(--primary), var(--secondary));
+            width: 0%;
+            transition: width 0.4s ease;
+            border-radius: 5px;
+        }
+        
+        .progress-text {
+            text-align: left;
+            font-size: 0.9rem;
+            color: #6c757d;
+        }
+        
+        .question-container {
+            margin-bottom: 30px;
+            animation: slideIn 0.4s ease;
+        }
+        
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateX(20px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+        
+        .question {
+            font-size: 1.3rem;
+            font-weight: 600;
+            margin-bottom: 20px;
+            line-height: 1.5;
+        }
+        
+        .options {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 12px;
+        }
+        
+        .option {
+            padding: 15px;
+            background-color: white;
+            border: 2px solid #e9ecef;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 1rem;
+            display: flex;
+            align-items: center;
+        }
+        
+        .option:hover {
+            border-color: var(--primary);
+            transform: translateX(-5px);
+        }
+        
+        .option.selected {
+            background-color: var(--primary);
+            color: white;
+            border-color: var(--primary);
+        }
+        
+        .option input[type="radio"] {
+            margin-left: 10px;
+        }
+        
+        .btn {
+            padding: 12px 25px;
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            display: block;
+            margin: 0 auto;
+        }
+        
+        .btn:hover {
+            background-color: #5a52e0;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(108, 99, 255, 0.3);
+        }
+        
+        .btn:disabled {
+            background-color: #adb5bd;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+        
+        .result-container {
+            text-align: center;
+            padding: 30px;
+            display: none;
+            animation: fadeIn 0.8s ease;
+        }
+        
+        .result-title {
+            color: var(--primary);
+            font-size: 1.8rem;
+            margin-bottom: 20px;
+        }
+        
+        .personality-type {
+            font-size: 3rem;
+            font-weight: bold;
+            color: var(--secondary);
+            margin: 20px 0;
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+        
+        .result-description {
+            font-size: 1.1rem;
+            line-height: 1.8;
+            margin-bottom: 30px;
+        }
+        
+        .traits {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 30px;
+        }
+        
+        .trait {
+            padding: 8px 15px;
+            background-color: var(--light);
+            border-radius: 20px;
+            font-size: 0.9rem;
+        }
+        
+        .restart-btn {
+            background-color: var(--secondary);
+        }
+        
+        .restart-btn:hover {
+            background-color: #e05574;
+        }
+        
+        @media (max-width: 768px) {
+            .container {
+                margin: 15px;
+                padding: 15px;
+            }
+            
+            h1 {
+                font-size: 1.8rem;
+            }
+            
+            .question {
+                font-size: 1.1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>تێستی کەسایەتی</h1>
+        
+        <div id="quiz-container">
+            <div class="progress-container">
+                <div class="progress-bar">
+                    <div class="progress" id="progress"></div>
+                </div>
+                <div class="progress-text" id="progress-text">پرسیار ١ لە ١٠</div>
+            </div>
+            
+            <div class="question-container">
+                <div class="question" id="question"></div>
+                <div class="options" id="options"></div>
+            </div>
+            
+            <button class="btn" id="next-btn" disabled>دواتر</button>
+        </div>
+        
+        <div class="result-container" id="result-container">
+            <h2 class="result-title">ئەنجامی تێستەکەت</h2>
+            <div class="personality-type" id="personality-type"></div>
+            <div class="result-description" id="result-description"></div>
+            
+            <div class="traits" id="traits"></div>
+            
+            <button class="btn restart-btn" id="restart-btn">تێستێکی تر</button>
+        </div>
+    </div>
+
+    <script>
+        const questions = [
+            {
+                question: "ئایا حەز دەکەیت کات لەگەڵ کۆمەڵێک خەڵک بەسەر ببەیت؟",
+                options: [
+                    "بەڵێ، زۆر حەز دەکەم و هەمیشە پێم خۆشە",
+                    "بەڵێ، زۆربەی کات حەز دەکەم",
+                    "هەندێک جار، بەندە لەسەر کات و بارودۆخ",
+                    "زۆر نا، بەڵام دەتوانم بیکەم",
+                    "نەخێر، زۆر ناخۆشمە",
+                    "نەخێر، هەرگیز حەز ناکەم"
+                ],
+                scores: { E: 3, E: 2, E: 1, I: 1, I: 2, I: 3 }
+            },
+            {
+                question: "ئایا زیاتر حەز دەکەیت:",
+                options: [
+                    "بیر لە ئەوە بکەیتەوە کە شتەکان چۆن دەتوانن ببن (خەیاڵی)",
+                    "بیرکردنەوە لە ئەگەرە جیاوازەکان",
+                    "بینینی شتەکان بەو شێوەیەی کە هەن (ڕاستەقینە)",
+                    "سەیرکردنی وردەکارییەکان",
+                    "تێگەیشتن لە ڕێگای کارکردنی شتەکان",
+                    "بەکارهێنانی شتەکان بۆ ئەوەی بزانم چۆن کار دەکەن"
+                ],
+                scores: { N: 3, N: 2, S: 2, S: 1, N: 1, S: 3 }
+            },
+            {
+                question: "کاتێک بڕیار دەدەیت، ئایا:",
+                options: [
+                    "هەستەکانت پێشەنگن و هەستەکانت ڕێت دەخەن",
+                    "هەستەکانت گرنگن بەڵام بیریش دەکەیتەوە",
+                    "بە هەردووکیان سەیر دەکەم بە یەکسانەوە",
+                    "لۆجیک و ڕێژە پێشەنگن",
+                    "بە تەنیا لۆجیک سەیر دەکەم",
+                    "هەرگیز بە هەست بڕیار نادەم"
+                ],
+                scores: { F: 3, F: 2, F: 1, T: 1, T: 2, T: 3 }
+            },
+            {
+                question: "ئایا پلانی ڕۆژانەت هەیە؟",
+                options: [
+                    "بەڵێ، هەمیشە پلانێکی ورد و ڕێکم هەیە",
+                    "بەڵێ، پلانی سەرەکی هەیە بەڵام ڕێگە بە گۆڕان دەدەم",
+                    "هەندێک جار پلان دادەنێم",
+                    "بە پەلە دەڕۆم بەڵام هەندێک شت بە بیر دەمێنمەوە",
+                    "نەخێر، بە پەلە دەڕۆم",
+                    "نەخێر، هەرگیز پلان نانێم"
+                ],
+                scores: { J: 3, J: 2, J: 1, P: 1, P: 2, P: 3 }
+            },
+            {
+                question: "ئایا حەز دەکەیت بۆ کەسانی تر ڕێنمایی بکەیت؟",
+                options: [
+                    "بەڵێ، زۆر حەز دەکەم و بە باشی دەتوانم",
+                    "بەڵێ، حەز دەکەم کاتێک داوام لێبکرێت",
+                    "هەندێک جار، ئەگەر زانیارییەکم هەبێت",
+                    "نەخێر، حەز ناکەم بەڵام دەتوانم",
+                    "نەخێر، زۆر ناخۆشمە",
+                    "نەخێر، هەرگیز ناکەم"
+                ],
+                scores: { E: 3, E: 2, E: 1, I: 1, I: 2, I: 3 }
+            },
+            {
+                question: "کاتێک شتێک فێر دەبیت، ئایا:",
+                options: [
+                    "بیر لە پەیوەندییە گشتییەکە دەکەمەوە",
+                    "بیر لە بیرۆکەی سەرەکی دەکەمەوە",
+                    "سەیرکردنی نموونەی ڕاستەقینە",
+                    "سەیرکردنی وردەکارییەکان",
+                    "تاقیکردنەوەی کرداری",
+                    "فێربوون لە ڕێگای کردنی خۆم"
+                ],
+                scores: { N: 3, N: 2, S: 2, S: 1, N: 1, S: 3 }
+            },
+            {
+                question: "ئایا ئارام دەگریت لە کاتی بڕیاردان؟",
+                options: [
+                    "بەڵێ، زۆر بە قووڵی بیر دەکەمەوە",
+                    "بەڵێ، بەڵام هەوڵ دەدەم خێرا بڕیار بدەم",
+                    "بە پێی بارودۆخ",
+                    "نەخێر، بە ئاسانی بڕیار دەدەم",
+                    "نەخێر، زۆر خێرا بڕیار دەدەم",
+                    "هەرگیز بڕیار نادەم"
+                ],
+                scores: { F: 3, F: 2, F: 1, T: 1, T: 2, T: 3 }
+            },
+            {
+                question: "ئایا شتان بە ڕێک و پێکی خۆت دەخەیتە جێ؟",
+                options: [
+                    "بەڵێ، هەمیشە شتەکانم ڕێک و پێکن",
+                    "بەڵێ، زۆربەی کات",
+                    "هەندێک جار",
+                    "نەخێر، بەڵام هەندێک شت ڕێک دەخەم",
+                    "نەخێر، زۆربەی کات نا",
+                    "نەخێر، هەرگیز ڕێک ناخەم"
+                ],
+                scores: { J: 3, J: 2, J: 1, P: 1, P: 2, P: 3 }
+            },
+            {
+                question: "ئایا حەز دەکەیت لە چالاکییە کۆمەڵایەتییەکان بەشداری بکەیت؟",
+                options: [
+                    "بەڵێ، زۆر حەز دەکەم و هەمیشە",
+                    "بەڵێ، زۆربەی کات",
+                    "هەندێک جار",
+                    "نەخێر، بەڵام دەتوانم",
+                    "نەخێر، زۆر ناخۆشمە",
+                    "نەخێر، هەرگیز ناکەم"
+                ],
+                scores: { E: 3, E: 2, E: 1, I: 1, I: 2, I: 3 }
+            },
+            {
+                question: "کاتێک بیر دەکەیتەوە، ئایا:",
+                options: [
+                    "زۆر تێڕامان دەکەم و بیرۆکەی نوێ دروست دەکەم",
+                    "بیر لە ئەگەرە جیاوازەکان دەکەمەوە",
+                    "سەیرکردنی ڕاستییەکان",
+                    "سەیرکردنی وردەکارییەکان",
+                    "بیرکردنەوە لە ڕێگای کارکردنی شتەکان",
+                    "تاقیکردنەوەی کرداری"
+                ],
+                scores: { N: 3, N: 2, S: 2, S: 1, N: 1, S: 3 }
+            }
+        ];
+
+        let currentQuestion = 0;
+        let score = { E: 0, I: 0, N: 0, S: 0, F: 0, T: 0, J: 0, P: 0 };
+        let selectedOption = null;
+
+        const quizContainer = document.getElementById('quiz-container');
+        const resultContainer = document.getElementById('result-container');
+        const questionElement = document.getElementById('question');
+        const optionsElement = document.getElementById('options');
+        const progressElement = document.getElementById('progress');
+        const progressTextElement = document.getElementById('progress-text');
+        const nextButton = document.getElementById('next-btn');
+        const personalityTypeElement = document.getElementById('personality-type');
+        const resultDescriptionElement = document.getElementById('result-description');
+        const traitsElement = document.getElementById('traits');
+        const restartButton = document.getElementById('restart-btn');
+
+        function showQuestion() {
+            if (currentQuestion < questions.length) {
+                const question = questions[currentQuestion];
+                questionElement.textContent = question.question;
+                optionsElement.innerHTML = '';
+                
+                question.options.forEach((option, index) => {
+                    const optionElement = document.createElement('label');
+                    optionElement.className = 'option';
+                    optionElement.innerHTML = `
+                        ${option}
+                        <input type="radio" name="option" value="${index}" style="display: none;">
+                    `;
+                    
+                    optionElement.addEventListener('click', () => {
+                        document.querySelectorAll('.option').forEach(opt => {
+                            opt.classList.remove('selected');
+                        });
+                        optionElement.classList.add('selected');
+                        selectedOption = index;
+                        nextButton.disabled = false;
+                    });
+                    
+                    optionsElement.appendChild(optionElement);
+                });
+                
+                progressElement.style.width = `${((currentQuestion + 1) / questions.length) * 100}%`;
+                progressTextElement.textContent = `پرسیار ${currentQuestion + 1} لە ${questions.length}`;
+                nextButton.disabled = true;
+            } else {
+                showResult();
+            }
+        }
+
+        function showResult() {
+            quizContainer.style.display = 'none';
+            resultContainer.style.display = 'block';
+            
+            const personalityType = 
+                (score.E > score.I ? 'E' : 'I') +
+                (score.N > score.S ? 'N' : 'S') +
+                (score.F > score.T ? 'F' : 'T') +
+                (score.J > score.P ? 'J' : 'P');
+            
+            personalityTypeElement.textContent = personalityType;
+            
+            const personalityData = {
+                'ENFJ': {
+                    description: 'تۆ کەسێکی پەروەردەکار و گەرمی، توانای سەرکردایەتی و یارمەتیدانی خەڵکت هەیە.',
+                    traits: ['یارمەتیدەر', 'پەروەردەکار', 'سەرکردە', 'بەهەست']
+                },
+                'ENFP': {
+                    description: 'تۆ کەسێکی داهێنەر و خۆشەویست، هەمیشە بیرۆکەی نوێت هەیە و خەڵک حەزت لێدەکەن.',
+                    traits: ['داهێنەر', 'خۆشەویست', 'خۆشحاڵ', 'ئەنرژیک']
+                },
+                'ENTJ': {
+                    description: 'تۆ کەسێکی بەرپرسیار و سەرکردەیی، توانای پلاندانان و ڕێنمایی خەڵکت هەیە.',
+                    traits: ['سەرکردە', 'بەرپرسیار', 'پلاندەر', 'ڕاستگۆ']
+                },
+                'ENTP': {
+                    description: 'تۆ کەسێکی زیرەک و قسەکەر، توانای گۆڕینی بیرۆکەکانت هەیە و خەڵک سەرسامت دەکەن.',
+                    traits: ['زیرەک', 'قسەکەر', 'داهێنەر', 'ئەنرژیک']
+                },
+                'ESFJ': {
+                    description: 'تۆ کەسێکی میهرەبان و یاریدەدەر، هەمیشە بیری لە خەڵک دەکەیتەوە و یارمەتیدەریت.',
+                    traits: ['میهرەبان', 'یاریدەدەر', 'پەروەردەکار', 'بەهەست']
+                },
+                'ESFP': {
+                    description: 'تۆ کەسێکی خۆشحاڵ و کۆمەڵایەتی، هەمیشە فۆڕمی خۆشیت و خەڵک حەزت لێدەکەن.',
+                    traits: ['خۆشحاڵ', 'کۆمەڵایەتی', 'ئەنرژیک', 'بەهەست']
+                },
+                'ESTJ': {
+                    description: 'تۆ کەسێکی ڕێک و پێک و بەرپرسیار، خەڵک پشت بە تۆ دەبەستن و ڕێکت پێدەکەن.',
+                    traits: ['ڕێک و پێک', 'بەرپرسیار', 'پلاندەر', 'ڕاستگۆ']
+                },
+                'ESTP': {
+                    description: 'تۆ کەسێکی چالاک و ڕاستەوخۆ، توانای جێبەجێکردنی شتەکانت هەیە و خەڵک سەرسامت دەکەن.',
+                    traits: ['چالاک', 'ڕاستەوخۆ', 'ئەنرژیک', 'کرداری']
+                },
+                'INFJ': {
+                    description: 'تۆ کەسێکی قووڵ و هونەرمەند، توانای تێگەیشتنت لە خەڵک زۆرە و بیرۆکە قووڵەکانت هەیە.',
+                    traits: ['قووڵ', 'هونەرمەند', 'پەروەردەکار', 'بەهەست']
+                },
+                'INFP': {
+                    description: 'تۆ کەسێکی بەهەست و ئایدیاڵیست، هەمیشە بیری لە یەکسانی و ڕاستی دەکەیتەوە.',
+                    traits: ['بەهەست', 'ئایدیاڵیست', 'داهێنەر', 'میهرەبان']
+                },
+                'INTJ': {
+                    description: 'تۆ کەسێکی استراتیجی و بیرکردنەوە، توانای بینینی داهاتووت هەیە و پلانی دروست دەکەیت.',
+                    traits: ['استراتیجی', 'بیرکردنەوە', 'پلاندەر', 'زیرەک']
+                },
+                'INTP': {
+                    description: 'تۆ کەسێکی زانای و گەڕانەوە، توانای شیکردنەوەی کێشەکانت هەیە و زانخوازی زۆرە.',
+                    traits: ['زانای', 'گەڕانەوە', 'زیرەک', 'داهێنەر']
+                },
+                'ISFJ': {
+                    description: 'تۆ کەسێکی پێگەیشتوو و یاریدەدەر، هەمیشە بیری لە خەڵک دەکەیتەوە و پشتگیریت.',
+                    traits: ['پێگەیشتوو', 'یاریدەدەر', 'میهرەبان', 'بەرپرسیار']
+                },
+                'ISFP': {
+                    description: 'تۆ کەسێکی میهرەبان و هونەرمەند، توانای بینینی جوانییەکانت هەیە و هونەرت هەیە.',
+                    traits: ['میهرەبان', 'هونەرمەند', 'بەهەست', 'ئازاد']
+                },
+                'ISTJ': {
+                    description: 'تۆ کەسێکی پشتگیر و ڕێک و پێک، خەڵک پشت بە تۆ دەبەستن و وریایت.',
+                    traits: ['پشتگیر', 'ڕێک و پێک', 'بەرپرسیار', 'ڕاستگۆ']
+                },
+                'ISTP': {
+                    description: 'تۆ کەسێکی شارەزا و کرداری، توانای چارەسەری کێشەکانت هەیە و خێرات.',
+                    traits: ['شارەزا', 'کرداری', 'ئازاد', 'ڕاستەوخۆ']
+                }
+            };
+            
+            resultDescriptionElement.textContent = personalityData[personalityType].description;
+            
+            traitsElement.innerHTML = '';
+            personalityData[personalityType].traits.forEach(trait => {
+                const traitElement = document.createElement('div');
+                traitElement.className = 'trait';
+                traitElement.textContent = trait;
+                traitsElement.appendChild(traitElement);
+            });
+        }
+
+        nextButton.addEventListener('click', () => {
+            if (selectedOption !== null) {
+                const question = questions[currentQuestion];
+                const types = Object.keys(question.scores);
+                const values = Object.values(question.scores);
+                
+                score[types[selectedOption]] += values[selectedOption];
+                
+                currentQuestion++;
+                selectedOption = null;
+                showQuestion();
+            }
+        });
+
+        restartButton.addEventListener('click', () => {
+            currentQuestion = 0;
+            score = { E: 0, I: 0, N: 0, S: 0, F: 0, T: 0, J: 0, P: 0 };
+            selectedOption = null;
+            
+            quizContainer.style.display = 'block';
+            resultContainer.style.display = 'none';
+            
+            showQuestion();
+        });
+
+        showQuestion();
+    </script>
+</body>
+</html>
